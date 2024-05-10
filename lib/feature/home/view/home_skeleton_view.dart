@@ -13,6 +13,12 @@ class HomeSkeletonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SizeConfig.isWebTrue
+        ? buildScaffoldWeb(context)
+        : buildScaffoldMobile(context);
+  }
+
+  Scaffold buildScaffoldWeb(BuildContext context) {
     return Scaffold(
       body: Skeletonizer(
         child: CustomScrollView(
@@ -60,6 +66,8 @@ class HomeSkeletonView extends StatelessWidget {
                 title: Container(
                   margin: EdgeInsets.only(bottom: 10.h, right: 70.h),
                   child: AppTextField(
+                    height: 70.h,
+                    width: 200.w,
                     hintText: "Search for all images on Pixabay",
                   ),
                 ),
@@ -108,6 +116,109 @@ class HomeSkeletonView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Scaffold buildScaffoldMobile(BuildContext context) {
+    return Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 150.h,
+              floating: true,
+              pinned: false,
+              centerTitle: false,
+              foregroundColor: Colors.transparent,
+              flexibleSpace: FlexibleSpaceBar(
+                expandedTitleScale: 1,
+                background: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                        AssetConstants.backgroundImage,
+                      ),
+                    ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(10.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AppTextField(
+                          height: 60.h,
+                          width: SizeConfig.screenWidth,
+                          hintText: TextConstants.searchHint,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              title: SvgPicture.asset(
+                width: 30.w,
+                height: 30.h,
+                AssetConstants.logoSvg,
+                color: AppColor.white,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 20),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.all(10.h),
+                child: Column(
+                  children: [
+                    Text(
+                      "viewModel.popularSearch.first",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Wrap(
+                      runSpacing: 10.h,
+                      spacing: 10.h,
+                      alignment: WrapAlignment.start,
+                      runAlignment: WrapAlignment.spaceEvenly,
+                      children: List.generate(
+                        18,
+                        (index) => index == 0
+                            ? Text(
+                                TextConstants.popularSearch,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                  fontSize: 15.sp,
+                                ),
+                              )
+                            : ChoiceChip(
+                                onSelected: (isTrue) {},
+                                selectedColor: Colors.grey.shade300,
+                                checkmarkColor: Colors.black,
+                                elevation: 0,
+                                label: Text("data"),
+                                selected: false,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            buildSkeletonGridView(context),
+          ],
+        ),
+        bottomNavigationBar: SizedBox(
+          height: 50,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ));
   }
 
   Widget buildSkeletonGridView(BuildContext context) {

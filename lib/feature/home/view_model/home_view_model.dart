@@ -83,6 +83,7 @@ class HomeViewModel extends GetxController {
 
     response.fold((failure) {
       setResponse(ApiResponse.error(failure.message));
+      Utils.flushBarErrorMessage(failure.message);
     }, (data) {
       setResponse(ApiResponse.completed(data));
       imageList.addAll(data.hits);

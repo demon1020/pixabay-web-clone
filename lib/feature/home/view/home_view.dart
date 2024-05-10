@@ -41,7 +41,7 @@ class _HomeViewState extends State<HomeView> {
           );
 
         case Status.completed:
-          return buildWebBody();
+          return SizeConfig.isWebTrue ? buildWebBody() : buildMobileBody();
         default:
           return Center(child: Text('Default'));
       }
@@ -99,6 +99,8 @@ class _HomeViewState extends State<HomeView> {
               title: Container(
                 margin: EdgeInsets.only(bottom: 10.h, right: 70.h),
                 child: AppTextField(
+                  height: 70.h,
+                  width: 200.w,
                   controller: viewModel.searchController,
                   hintText: "Search for all images on Pixabay",
                   suffix: Container(
@@ -237,11 +239,10 @@ class _HomeViewState extends State<HomeView> {
   Scaffold buildMobileBody() {
     return Scaffold(
       body: CustomScrollView(
-        // key: ValueKey<int>(0),
         controller: viewModel.scrollController,
         slivers: <Widget>[
           SliverAppBar(
-            expandedHeight: 350.h,
+            expandedHeight: 150.h,
             floating: true,
             pinned: false,
             centerTitle: false,
@@ -258,51 +259,25 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      TextConstants.heading,
-                      style: TextStyle(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColor.white,
+                child: Container(
+                  margin: EdgeInsets.all(10.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AppTextField(
+                        height: 60.h,
+                        width: SizeConfig.screenWidth,
+                        controller: viewModel.searchController,
+                        hintText: TextConstants.searchHint,
                       ),
-                    ),
-                    Text(
-                      TextConstants.subHeading,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColor.white,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              title: Container(
-                margin: EdgeInsets.only(bottom: 10.h, right: 70.h),
-                child: AppTextField(
-                  controller: viewModel.searchController,
-                  hintText: TextConstants.searchHint,
-                  suffix: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: Text(
-                      TextConstants.images,
-                      style: TextStyle(
-                        color: AppColor.primary.withGreen(100),
-                        fontSize: 14.sp,
-                      ),
-                    ),
+                    ],
                   ),
                 ),
               ),
             ),
             title: SvgPicture.asset(
               width: 30.w,
-              height: 50.h,
+              height: 30.h,
               AssetConstants.logoSvg,
               color: AppColor.white,
             ),
@@ -312,39 +287,45 @@ class _HomeViewState extends State<HomeView> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              margin: EdgeInsets.all(20.h),
-              child: Wrap(
-                  runSpacing: 10.h,
-                  spacing: 10.h,
-                  alignment: WrapAlignment.start,
-                  children: viewModel.popularSearch
-                      .map(
-                        (element) => element == TextConstants.popularSearch
-                            ? Text(
-                                element,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                  fontSize: 15.sp,
-                                ),
-                              )
-                            : ChoiceChip(
-                                onSelected: (isTrue) {
-                                  viewModel.searchController.text = element;
-                                  viewModel.searchImages(element);
-                                },
-                                selectedColor: Colors.grey.shade300,
-                                checkmarkColor: Colors.black,
-                                elevation: 0,
-                                label: Text(element),
-                                selected:
-                                    viewModel.searchController.text == element
-                                        ? true
-                                        : false,
-                              ),
-                      )
-                      .toList()),
+              margin: EdgeInsets.all(10.h),
+              child: Column(
+                children: [
+                  Text(
+                    viewModel.popularSearch.first,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Wrap(
+                      runSpacing: 10.h,
+                      spacing: 10.h,
+                      alignment: WrapAlignment.start,
+                      runAlignment: WrapAlignment.spaceEvenly,
+                      children: viewModel.popularSearch
+                          .sublist(1, 12)
+                          .map(
+                            (element) => ChoiceChip(
+                              onSelected: (isTrue) {
+                                viewModel.searchController.text = element;
+                                viewModel.searchImages(element);
+                              },
+                              selectedColor: Colors.grey.shade300,
+                              checkmarkColor: Colors.black,
+                              elevation: 0,
+                              label: Text(element),
+                              selected:
+                                  viewModel.searchController.text == element
+                                      ? true
+                                      : false,
+                            ),
+                          )
+                          .toList()),
+                ],
+              ),
             ),
           ),
           !viewModel.isLoading.value && viewModel.imageList.isEmpty

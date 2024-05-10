@@ -15,8 +15,13 @@ class DetailView extends StatefulWidget {
 
 class _DetailViewState extends State<DetailView> {
   bool isFullScreen = true;
+
   @override
   Widget build(BuildContext context) {
+    return buildScaffold(context);
+  }
+
+  Scaffold buildScaffold(BuildContext context) {
     return Scaffold(
       body: Hero(
         tag: widget.id,
@@ -25,6 +30,7 @@ class _DetailViewState extends State<DetailView> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height,
@@ -43,51 +49,44 @@ class _DetailViewState extends State<DetailView> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 10,
-                left: SizeConfig.screenWidth / 2.5,
-                child: Container(
-                  height: 70.h,
-                  width: 70.w,
-                  margin: EdgeInsets.all(20.h),
-                  decoration: BoxDecoration(
-                    color: AppColor.lightGrey.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  alignment: Alignment.center,
-                  child: FittedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            context.pop();
-                          },
-                          icon: Icon(
-                            size: 35.h,
-                            Icons.arrow_back,
-                            color: AppColor.black,
-                          ),
+              Container(
+                height: 70.h,
+                margin: EdgeInsets.all(20.h),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Card(
+                      child: IconButton(
+                        onPressed: () {
+                          context.pop();
+                        },
+                        icon: Icon(
+                          size: 35.h,
+                          Icons.arrow_back,
+                          color: AppColor.black,
                         ),
-                        SizedBox(width: 10.h),
-                        IconButton(
-                          onPressed: () {
-                            isFullScreen = !isFullScreen;
-                            setState(() {});
-                          },
-                          icon: Icon(
-                            size: 35.h,
-                            isFullScreen
-                                ? Icons.fullscreen_exit
-                                : Icons.fullscreen,
-                            color: AppColor.black,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 10.h),
+                    Card(
+                      child: IconButton(
+                        onPressed: () {
+                          isFullScreen = !isFullScreen;
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          size: 35.h,
+                          isFullScreen
+                              ? Icons.fullscreen_exit
+                              : Icons.fullscreen,
+                          color: AppColor.black,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

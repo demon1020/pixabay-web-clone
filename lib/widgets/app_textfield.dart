@@ -1,11 +1,11 @@
-import 'package:gallery/utils/config/size_config.dart';
-
 import '/core.dart';
 
 class AppTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String hintText;
   bool obscureText;
+  double height;
+  double width;
   final bool showSuffixIcon;
   final Widget? suffix;
   final FormFieldValidator? validator;
@@ -24,6 +24,8 @@ class AppTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onEditingComplete,
     this.suffix,
+    required this.height,
+    required this.width,
   });
 
   @override
@@ -34,8 +36,8 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 70.h,
-      width: 200.w,
+      height: widget.height,
+      width: widget.width,
       child: TextFormField(
         controller: widget.controller,
         obscureText: widget.obscureText,
