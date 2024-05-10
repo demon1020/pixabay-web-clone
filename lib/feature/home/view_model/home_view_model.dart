@@ -9,7 +9,7 @@ class HomeViewModel extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   Timer? _debounce;
-  Map<String, String> query = {'page': '1', 'per_page': '50', 'id': ''};
+  Map<String, String> query = {'page': '1', 'per_page': '20', 'id': ''};
 
   RxInt page = 1.obs;
   RxBool isLoading = false.obs;
@@ -36,7 +36,6 @@ class HomeViewModel extends GetxController {
     "dog",
     "anime",
     "iphone",
-    "love"
   ].obs;
 
   @override
